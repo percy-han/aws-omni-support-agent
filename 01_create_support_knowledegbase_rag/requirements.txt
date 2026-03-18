@@ -96,7 +96,7 @@ opentelemetry-instrumentation-threading==0.61b0
 opentelemetry-sdk==1.40.0
 opentelemetry-semantic-conventions==0.61b0
 orjson==3.11.7
-packaging==24.2
+packaging==26.0
 pandas==3.0.1
 parso==0.8.6
 pexpect==4.9.0
