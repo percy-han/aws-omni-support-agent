@@ -11,19 +11,17 @@
 
 ## 📖 目录
 
-- [项目简介](#-项目简介)
-- [核心特性](#-核心特性)
-- [系统架构](#-系统架构)
-- [业务流程](#-业务流程)
-- [技术栈](#-技术栈)
-- [快速开始](#-快速开始)
-- [详细部署](#-详细部署)
-- [使用指南](#-使用指南)
-- [项目结构](#-项目结构)
-- [CI/CD](#-cicd)
-- [常见问题](#-常见问题)
-- [贡献指南](#-贡献指南)
-- [License](#-license)
+- [项目简介](#项目简介)
+- [核心特性](#核心特性)
+- [系统架构](#系统架构)
+- [业务流程](#业务流程)
+- [技术栈](#技术栈)
+- [快速开始](#快速开始)
+- [使用指南](#使用指南)
+- [项目结构](#项目结构)
+- [常见问题](#常见问题)
+- [贡献指南](#贡献指南)
+- [License](#license)
 
 ---
 
@@ -274,72 +272,41 @@ Agent Runtime → Gateway → Lambda → Support API
 - **AWS CLI**: 已配置凭证
 - **Git**: 用于克隆仓库
 
-### 5 分钟快速体验
 
-```bash
-# 1. 克隆仓库
-git clone https://github.com/percy-han/aws-omni-support-agent.git
-cd aws-omni-support-agent
+### 完整部署
 
-# 2. 部署 Lambda 函数
-cd 02_AWS_Support_Case_Lambda
-pip install boto3
-python deploy_lambda.py
+1. **Lambda部署**（Bash）
+    ```bash
+     git clone https://github.com/percy-han/aws-omni-support-agent.git
+     cd aws-omni-support-agent
+     ```
 
-# 3. 测试 Lambda
-python test_lambda.py
+2. **Lambda部署**（Bash）
+     ```bash
+     # 1. 部署 Lambda 函数
+     cd 02_AWS_Support_Case_Lambda
+     pip install boto3
+     python deploy_lambda.py
+     
+     # 2. 测试 Lambda
+     python test_lambda.py
+     
+     # 3. 查看输出
+     # ✅ Lambda 部署成功
+     # ✅ 7 个工具可用
+     ```
 
-# 4. 查看输出
-# ✅ Lambda 部署成功
-# ✅ 7 个工具可用
-```
-
-### 完整部署（60 分钟）
-
-参考详细部署指南：
-
-1. **基础设施部署**（SageMaker Notebook）
+3. **基础设施部署**（SageMaker Notebook）
    - [SageMaker Notebook 执行清单](SAGEMAKER_NOTEBOOK_CHECKLIST.md)
    - 创建 Knowledge Base、Gateway、Agent Runtime
 
-2. **应用代码部署**（GitHub Actions）
-   - [CI/CD 配置指南](.github/CICD_SETUP.md)
-   - 配置 Secrets、Environments
 
-3. **验证部署**
+4. **验证部署**
    - [部署指南](DEPLOYMENT_GUIDE.md)
 
 ---
 
-## 📚 详细部署
 
-### 架构层次
-
-| 层次 | 部署方式 | 频率 | 文档 |
-|------|---------|------|------|
-| **基础设施** | SageMaker Notebook | 偶尔（初次 + 重大变更） | [Notebook 清单](SAGEMAKER_NOTEBOOK_CHECKLIST.md) |
-| **Lambda 代码** | GitHub Actions | 频繁（每次代码变更） | [Lambda 部署](.github/workflows/deploy-lambda.yml) |
-| **Agent 代码** | SageMaker Notebook | 中等（优化 Prompt） | [Notebook 清单](SAGEMAKER_NOTEBOOK_CHECKLIST.md) |
-
-### 环境配置
-
-#### DEV 环境
-```yaml
-用途: 开发测试
-自动部署: ✅ Lambda 自动，基础设施手动
-数据: 测试数据
-资源命名: *-dev
-```
-
-#### PROD 环境
-```yaml
-用途: 生产服务
-自动部署: ⚠️ 需审批
-数据: 真实数据
-资源命名: *-prod
-```
-
----
 
 ## 📖 使用指南
 
@@ -436,25 +403,6 @@ aws-omni-support-agent/
 │   ├── .bedrock_agentcore.yaml             # 配置文件（.gitignore）
 │   └── requirements.txt                    # Python 依赖
 │
-├── .github/                                # GitHub Actions & Docs
-│   ├── workflows/                          # CI/CD 工作流
-│   │   ├── ci.yml                          # 持续集成
-│   │   ├── deploy-lambda.yml               # Lambda 部署 ⭐
-│   │   ├── pr-check.yml                    # PR 检查
-│   │   ├── dependency-update.yml           # 依赖扫描
-│   │   └── ...
-│   ├── scripts/                            # 辅助脚本
-│   │   └── local-ci-test.sh                # 本地 CI 测试
-│   ├── CICD_SETUP.md                       # CI/CD 配置指南
-│   ├── QUICK_REFERENCE.md                  # 快速参考
-│   └── ...
-│
-├── aws-cicd/                               # AWS CI/CD 方案（参考）
-│   ├── NOTEBOOK_CICD_STRATEGY.md           # Notebook CI/CD 策略
-│   └── ARCHITECTURE_REEVALUATION.md        # 架构评估
-│
-├── scripts/                                # 项目脚本
-│   └── cleanup_before_push.sh              # 推送前清理
 │
 ├── DEPLOYMENT_GUIDE.md                     # 部署指南 ⭐
 ├── SAGEMAKER_NOTEBOOK_CHECKLIST.md         # Notebook 清单 ⭐
@@ -476,101 +424,14 @@ aws-omni-support-agent/
 
 ---
 
-## 🔄 CI/CD
-
-### 混合 CI/CD 架构
-
-我们采用**混合架构**，平衡自动化和灵活性：
-
-```
-┌─────────────────────────────────┐
-│ 基础设施（SageMaker Notebook）   │
-│ - Knowledge Base                │
-│ - Gateway                       │
-│ - Agent Runtime                 │
-│ 频率: 偶尔（手动）               │
-└─────────────────────────────────┘
-              ↓
-┌─────────────────────────────────┐
-│ 应用代码（GitHub Actions）       │
-│ - Lambda 函数                   │
-│ - 配置参数                      │
-│ 频率: 频繁（自动）               │
-└─────────────────────────────────┘
-```
-
-### 自动化工作流
-
-| Workflow | 触发条件 | 功能 |
-|----------|---------|------|
-| **ci.yml** | Push/PR | 代码质量检查、安全扫描 |
-| **deploy-lambda.yml** | Push to main | Lambda 自动部署 |
-| **pr-check.yml** | PR 创建/更新 | PR 质量把关、自动审查 |
-| **dependency-update.yml** | 每周一 | 依赖安全扫描 |
-
-### 本地开发工作流
-
-```bash
-# 1. 修改代码
-vim 02_AWS_Support_Case_Lambda/lambda_handler.py
-
-# 2. 本地测试
-./.github/scripts/local-ci-test.sh
-
-# 3. 提交
-git add .
-git commit -m "feat: add new tool"
-
-# 4. 推送（自动触发 CI/CD）
-git push origin main
-
-# 5. 查看部署进度
-# GitHub → Actions → Deploy Lambda to AWS
-```
-
-### 生产部署流程
-
-```
-开发环境测试 → PR 审查 → 合并到 main → 自动部署 DEV
-                                            ↓
-                           手动触发 → 部署到 PROD（需审批）
-```
-
-详细配置参见：[CI/CD 配置指南](.github/CICD_SETUP.md)
-
----
-
 ## ❓ 常见问题
 
-### Q1: 如何开始使用这个项目？
 
-**A**: 分两步：
-1. **快速体验**（5 分钟）：只部署 Lambda，体验工具函数
-2. **完整部署**（60 分钟）：按照 [SAGEMAKER_NOTEBOOK_CHECKLIST.md](SAGEMAKER_NOTEBOOK_CHECKLIST.md) 部署全套系统
-
-### Q2: 为什么使用混合 CI/CD（GitHub Actions + SageMaker）？
-
-**A**:
-- **基础设施**复杂且变更少，SageMaker Notebook 提供交互式调试
-- **Lambda 代码**频繁更新，GitHub Actions 提供自动化部署
-- **成本优化**：避免了 CodePipeline 的额外费用（节省 ~$5/月）
-
-### Q3: 支持哪些 AWS Support 操作？
-
-**A**: 7 个核心工具：
-1. `create_support_case` - 创建工单
-2. `describe_support_cases` - 查询工单
-3. `add_communication_to_case` - 添加回复
-4. `resolve_support_case` - 关闭工单
-5. `describe_services` - 获取服务列表
-6. `describe_severity_levels` - 获取严重级别
-7. `add_attachments_to_set` - 上传附件
-
-### Q4: 如何自定义 Agent 的行为？
+### Q1: 如何自定义 Agent 的行为？
 
 **A**: 修改 `04_create_knowledge_mcp_gateway_Agent/aws_support_agent.py` 中的 `get_system_prompt()` 函数，该函数包含 320 行详细的业务逻辑。
 
-### Q5: 成本是多少？
+### Q2: 成本是多少？
 
 **A**:
 - **GitHub Actions**: 免费（公开仓库）或在免费额度内
@@ -579,7 +440,7 @@ git push origin main
 - **Bedrock**: 按 token 计费，根据实际使用量
 - **总计**: ~$5-10/月（小规模使用）
 
-### Q6: 如何回滚部署？
+### Q3: 如何回滚部署？
 
 **A**:
 - **Lambda**: 使用 AWS Lambda 版本别名回滚
@@ -587,14 +448,14 @@ git push origin main
 
 详细步骤参见：[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md#-回滚操作)
 
-### Q7: 支持哪些语言？
+### Q4: 支持哪些语言？
 
 **A**:
 - **Agent 输出**: 默认中文，支持英文
 - **代码**: Python 3.11
 - **文档**: 中英文混合（主要中文）
 
-### Q8: 如何贡献代码？
+### Q5: 如何贡献代码？
 
 **A**: 参见 [贡献指南](#-贡献指南)
 
