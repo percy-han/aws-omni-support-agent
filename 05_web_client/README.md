@@ -96,6 +96,12 @@ sudo apt install python3.11 python3.11-venv -y  # Ubuntu
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
 
+# 创建虚拟环境
+uv venv
+
+# 激活虚拟环境
+source .venv/bin/activate
+
 # 安装依赖
 cd web_client
 uv pip install -r requirements.txt
