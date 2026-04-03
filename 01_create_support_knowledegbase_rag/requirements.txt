@@ -68,7 +68,7 @@ langchain-aws==0.2.15
 langchain-community==0.3.16
 langchain-core==0.3.34
 langchain-openai==0.3.5
-langchain-text-splitters==0.3.6
+langchain-text-splitters==1.1.1
 langsmith==0.3.45
 lazy-imports==1.2.0
 markdown-it-py==4.0.0
