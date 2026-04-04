@@ -142,7 +142,7 @@ jobs:
             type=raw,value=${{ steps.env-suffix.outputs.suffix }}-latest
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./04_create_knowledge_mcp_gateway_Agent
           push: true
