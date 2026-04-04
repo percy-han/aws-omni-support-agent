@@ -58,7 +58,7 @@ py-openapi-schema-to-json-schema==0.0.3
 pycodestyle==2.14.0
 pycparser==3.0
 pydantic==2.12.5
-pydantic-core==2.41.5
+pydantic-core==2.42.0
 pydantic-settings==2.13.1
 pygments==2.19.2
 pyjwt==2.12.1
